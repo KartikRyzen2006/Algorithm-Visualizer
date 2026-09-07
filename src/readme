@@ -1,0 +1,60 @@
+src/
+│
+├── algorithms/
+│   ├── sorting/
+│   ├── searching/
+│   └── dataStructures/
+│
+├── components/
+│   ├── Header/
+│   ├── AlgorithmSelector/
+│   ├── ControlPanel/
+│   ├── ArrayVisualizer/
+│   ├── ArrayBar/
+│   └── SpeedControl/
+│
+├── engine/
+│   └── visualizationEngine.js
+│
+├── hooks/
+│   └── useVisualizer.js
+│
+├── utils/
+│
+├── App.jsx
+└── main.jsx
+
+algorithms/ → algorithmic/DSA logic
+components/ → UI/presentation
+engine/ → visualization execution
+hooks/ → reusable React state/behavior
+utils/ → general helper functions
+
+Operation       Data needed
+────────────────────────────────
+compare         index1, index2
+swap            index1, index2
+sorted          index
+visit           node/index
+insert          position + value
+delete          position/index
+
+             ┌──────────────┐
+             │   React UI   │
+             └───────┬──────┘
+                     ↓
+             ┌──────────────┐
+             │ useVisualizer│
+             └───────┬──────┘
+                     ↓
+             ┌──────────────┐
+             │    Engine    │
+             └───────┬──────┘
+                     ↓
+             ┌──────────────┐
+             │ Operations[] │
+             └───────┬──────┘
+                     ↑
+             ┌──────────────┐
+             │  Algorithms  │
+             └──────────────┘
