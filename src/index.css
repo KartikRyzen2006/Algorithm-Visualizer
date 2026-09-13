@@ -15,3 +15,70 @@ body {
     gap: 10px;
     margin-top: 30px;
 }
+
+.stack-container {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 5px;
+    margin-top: 30px;
+}
+
+.stack-item {
+    width: 80px;
+    height: 40px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-label {
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.queue-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.queue-item {
+    width: 60px;
+    height: 40px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.queue-label {
+    font-weight: bold;
+}
+
+.linked-list-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.linked-list-node {
+    width: 60px;
+    height: 40px;
+    border: 2px solid black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow {
+    font-weight: bold;
+}
+
+.head-label,
+.null-label {
+    font-weight: bold;
+}
