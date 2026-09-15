@@ -10,10 +10,29 @@ import stack from "./algorithms/dataStructures/stack";
 import createQueueOperation from "./algorithms/dataStructures/queue";
 import createLinkedListOperations from "./algorithms/dataStructures/linkedListOperations";
 import LinkedListVisualizer from "./components/LinkedListVisualizer/LinkedListVisualizer";
+import BST from "./algorithms/dataStructures/bst.js";
+import TreeVisualizer from "./components/TreeVisualizer/TreeVisualizer";
+import createTreeOperations from "./algorithms/dataStructures/treeOperations.js";
+
+const createBST = () => {
+    const bst = new BST();
+
+    bst.insert(10);
+    bst.insert(5);
+    bst.insert(15);
+    bst.insert(3);
+    bst.insert(7);
+    bst.insert(12);
+    bst.insert(20);
+
+    return bst;
+};
 
 function App () {
     const array = [1,2,3,4,5,6,7,8];
     const target = 6;
+   
+const bst = createBST();
 
     const [currentStep, setCurrentStep] = useState(-1);
     const [visualArray, setVisualArray] = useState(array);
@@ -25,8 +44,11 @@ function App () {
     const [stack,setStack] = useState([]);
     const [queue,setQueue] = useState([]);
     const [linkedList,setLinkedList] = useState([]);
+    const [treeRoot, setTreeRoot] = useState(bst.root);
+    const [traversal, setTraversal] = useState("inorder");
+    const [treeTarget, setTreeTarget] = useState(12);
 
-    const operations = createLinkedListOperations();
+    const operations = createTreeOperations(traversal,treeTarget);
     const currentOperation =
     currentStep >= 0 && currentStep < operations.length
         ? operations[currentStep]
@@ -58,7 +80,8 @@ function App () {
         foundIndex,
         stack,
         queue,
-        linkedList
+        linkedList,
+        treeRoot
     );
 
     setVisualArray(result.array);
@@ -68,6 +91,7 @@ function App () {
     setStack(result.stack);
     setQueue(result.queue);
     setLinkedList(result.linkedList);
+    setTreeRoot(result.treeRoot);
 
     setCurrentStep(currentStep + 1);
 };
@@ -138,6 +162,7 @@ console.log("OPERATION:", currentOperation);
                 setStack([]);
                 setQueue([]);
                 setLinkedList([]);
+                setTreeRoot(createBST().root);
             }}>
                 Reset
             </button>
@@ -167,7 +192,46 @@ console.log("OPERATION:", currentOperation);
 
             <h2>Linked List</h2>
             <LinkedListVisualizer linkedList ={linkedList}/>
+
+            <h2>Binary Tree</h2>
+
+            <label>
+                Traversal:
+
+                <select
+                    value={traversal}
+                    onChange={(e) => {
+                        setTraversal(e.target.value);
+                        setCurrentStep(-1);
+                        setCurrentVisitIndex(null);
+                        setFoundIndex(null);
+                        setIsPlaying(false);
+                    }}
+                >
+                    <option value="preorder">Preorder</option>
+                    <option value="inorder">Inorder</option>
+                    <option value="postorder">Postorder</option>
+                    <option value="levelorder">Level Order</option>
+                    <option value="search">BST Search</option>
+
+                    {traversal === "search" && (
+                    <label>
+                        Target:
+                        <input
+                            type="number"
+                            value={treeTarget}
+                            onChange={(e) => setTreeTarget(Number(e.treeTarget.value))}
+                        />
+                    </label>
+                )}
+                </select>
+            </label>
+            <TreeVisualizer root = {treeRoot}
+            currentVisitIndex={currentVisitIndex}
+            foundIndex={foundIndex}/>
              </div>
+
+            
         
 
         

@@ -82,3 +82,33 @@ body {
 .null-label {
     font-weight: bold;
 }
+
+.tree-visualizer {
+    position: relative;
+    margin-top: 20px;
+}
+
+.tree-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.tree-node {
+    position: absolute;
+
+    width: 50px;
+    height: 50px;
+
+    border: 2px solid black;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateX(-50%);
+
+    z-index: 2;
+}
