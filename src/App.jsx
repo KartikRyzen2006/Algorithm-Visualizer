@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState, useEffect} from "react";
 import ArrayBar from "./components/ArrayBar/ArrayBar";
 import traverse from "./algorithms/arrays/traverse";
 import containsDuplicate from "./algorithms/arrays/containsDuplicate";
@@ -13,6 +13,13 @@ import LinkedListVisualizer from "./components/LinkedListVisualizer/LinkedListVi
 import BST from "./algorithms/dataStructures/bst.js";
 import TreeVisualizer from "./components/TreeVisualizer/TreeVisualizer";
 import createTreeOperations from "./algorithms/dataStructures/treeOperations.js";
+import MinHeap from "./algorithms/heap/minHeap";
+import HeapVisualizer from "./components/HeapVisualizer/HeapVisualizer";
+import MaxHeap from "./algorithms/heap/maxHeap";
+import Graph from "./algorithms/graph/Graph";
+import bfs from "./algorithms/graph/bfs";
+import dfs from "./algorithms/graph/dfs";
+import GraphVisualizer from "./components/GraphVisualizer/GraphVisualizer";
 
 const createBST = () => {
     const bst = new BST();
@@ -28,6 +35,49 @@ const createBST = () => {
     return bst;
 };
 
+const createHeapOperations = (heapType) => {
+    const heap =
+        heapType === "max"
+            ? new MaxHeap()
+            : new MinHeap();
+
+    heap.insert(20);
+    heap.insert(10);
+    heap.insert(30);
+    heap.insert(5);
+    heap.insert(15);
+
+    if (heapType === "max") {
+        heap.extractMax();
+    } else {
+        heap.extractMin();
+    }
+
+    return heap.getSteps();
+};
+
+const createGraphData = (algorithm) => {
+    const graph = new Graph();
+
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+
+    const result =
+        algorithm === "dfs"
+            ? dfs(graph, "A")
+            : bfs(graph, "A");
+
+    return {
+        graph: graph.getGraph(),
+        vertices: graph.getVertices(),
+        steps: result.steps
+    };
+};
 function App () {
     const array = [1,2,3,4,5,6,7,8];
     const target = 6;
@@ -47,8 +97,43 @@ const bst = createBST();
     const [treeRoot, setTreeRoot] = useState(bst.root);
     const [traversal, setTraversal] = useState("inorder");
     const [treeTarget, setTreeTarget] = useState(12);
+    const [heap, setHeap] = useState([]);
+    const [visualizationMode, setVisualizationMode] = useState("tree");
+    const [heapType, setHeapType] = useState("min");
+    const [heapHighlighted, setHeapHighlighted] = useState([]);
+    const [heapStats, setHeapStats] = useState({
+    steps: 0,
+    comparisons: 0,
+    swaps: 0,
+    insertions: 0,
+    extractions: 0
+    });
+    const [graphAlgorithm, setGraphAlgorithm] = useState("bfs");
+    const [graphVisited, setGraphVisited] = useState([]);
+    const [graphActiveVertex, setGraphActiveVertex] = useState(null);
+    const [graphStats, setGraphStats] = useState({
+    steps: 0,
+    comparisons: 0,
+    visited: 0,
+    traversalOrder: []
+    });
 
-    const operations = createTreeOperations(traversal,treeTarget);
+    const treeOperations = createTreeOperations(
+        traversal,
+        treeTarget
+    );
+
+    const heapOperations =
+    createHeapOperations(heapType);
+    const graphData = createGraphData(graphAlgorithm);
+
+    const operations =
+    visualizationMode === "heap"
+        ? heapOperations
+        : visualizationMode === "graph"
+            ? graphData.steps
+            : treeOperations;  
+    
     const currentOperation =
     currentStep >= 0 && currentStep < operations.length
         ? operations[currentStep]
@@ -81,7 +166,10 @@ const bst = createBST();
         stack,
         queue,
         linkedList,
-        treeRoot
+        treeRoot,
+        heap,
+        graphVisited,
+        graphActiveVertex
     );
 
     setVisualArray(result.array);
@@ -92,6 +180,50 @@ const bst = createBST();
     setQueue(result.queue);
     setLinkedList(result.linkedList);
     setTreeRoot(result.treeRoot);
+    setHeap(result.heap);
+    setHeapHighlighted(result.heapHighlighted);
+    setGraphVisited(result.graphVisited);
+    setGraphActiveVertex(result.graphActiveVertex);
+
+    if (visualizationMode === "heap") {
+    setHeapStats(prev => ({
+        ...prev,
+        steps: prev.steps + 1,
+
+        comparisons:
+            prev.comparisons +
+            (currentOperation.type === "compare" ? 1 : 0),
+
+        swaps:
+            prev.swaps +
+            (
+                currentOperation.type === "swap" &&
+                currentOperation.array
+                    ? 1
+                    : 0
+            ),
+
+        insertions:
+            prev.insertions +
+            (currentOperation.type === "insert" ? 1 : 0),
+
+        extractions:
+            prev.extractions +
+            (currentOperation.type === "extract" ? 1 : 0)
+        }));
+    }
+    if (visualizationMode === "graph") {
+    setGraphStats(prev => ({
+        ...prev,
+        steps: prev.steps + 1,
+        comparisons:
+            prev.comparisons +
+            (currentOperation.type === "graphCompare" ? 1 : 0),
+        visited: result.graphVisited.length,
+        traversalOrder:
+            currentOperation.order || prev.traversalOrder
+    }));
+    }
 
     setCurrentStep(currentStep + 1);
 };
@@ -163,6 +295,24 @@ console.log("OPERATION:", currentOperation);
                 setQueue([]);
                 setLinkedList([]);
                 setTreeRoot(createBST().root);
+                setHeap([]);
+                setHeapHighlighted([]);
+                setHeapStats({
+                steps: 0,
+                comparisons: 0,
+                swaps: 0,
+                insertions: 0,
+                extractions: 0
+                });
+                setGraphVisited([]);
+                setGraphActiveVertex(null);
+
+                setGraphStats({
+                    steps: 0,
+                    comparisons: 0,
+                    visited: 0,
+                    traversalOrder: []
+                });
             }}>
                 Reset
             </button>
@@ -192,6 +342,122 @@ console.log("OPERATION:", currentOperation);
 
             <h2>Linked List</h2>
             <LinkedListVisualizer linkedList ={linkedList}/>
+
+            {visualizationMode === "heap" && (
+            <>
+        <h2>
+        {heapType === "min"
+        ? "Min Heap"
+        : "Max Heap"}
+        </h2>
+
+        <HeapVisualizer
+            heap={heap}
+            highlighted={heapHighlighted}
+        />
+
+        <div className="heap-statistics">
+            <h3>Heap Analysis</h3>
+
+            <p>
+                Steps: {heapStats.steps}
+            </p>
+
+            <p>
+                Comparisons: {heapStats.comparisons}
+            </p>
+
+            <p>
+                Swaps: {heapStats.swaps}
+            </p>
+
+            <p>
+                Insertions: {heapStats.insertions}
+            </p>
+
+            <p>
+                Extractions: {heapStats.extractions}
+            </p>
+
+            <p>
+                 Time Complexity: O(log n)
+            </p>
+
+            <p>
+                 Space Complexity: O(n)
+            </p>
+        </div>
+        </>
+        )}
+
+            <h2>Algorithm / Data Structure</h2>
+
+            <label>
+                Visualization:
+
+                <select
+                    value={visualizationMode}
+                    onChange={(e) => {
+                        setVisualizationMode(e.target.value);
+                        setCurrentStep(-1);
+                        setIsPlaying(false);
+                        setHeap([]);
+                    }}
+                >
+                    <option value="tree">Binary Tree / BST</option>
+                    <option value="heap">Heap</option>
+                    <option value="graph">Graph</option>
+                </select>
+
+            {visualizationMode === "graph" && (
+                <label>
+                    Graph Algorithm:
+
+                    <select
+                        value={graphAlgorithm}
+                        onChange={(e) => {
+                            setGraphAlgorithm(e.target.value);
+                            setCurrentStep(-1);
+                            setIsPlaying(false);
+                            setGraphVisited([]);
+                            setGraphActiveVertex(null);
+                        }}
+                    >
+                        <option value="bfs">BFS</option>
+                        <option value="dfs">DFS</option>
+                    </select>
+                </label>
+            )}
+            </label>
+
+            {visualizationMode === "heap" && (
+            <label>
+                Heap Type:
+
+                    <select
+                        value={heapType}
+                        onChange={(e) => {
+                            setHeapType(e.target.value);
+
+                            setCurrentStep(-1);
+                            setIsPlaying(false);
+                            setHeap([]);
+                            setHeapHighlighted([]);
+
+                            setHeapStats({
+                                steps: 0,
+                                comparisons: 0,
+                                swaps: 0,
+                                insertions: 0,
+                                extractions: 0
+                            });
+                        }}
+                    >
+                        <option value="min">Min Heap</option>
+                        <option value="max">Max Heap</option>
+                    </select>
+                </label>
+            )}
 
             <h2>Binary Tree</h2>
 
@@ -229,6 +495,58 @@ console.log("OPERATION:", currentOperation);
             <TreeVisualizer root = {treeRoot}
             currentVisitIndex={currentVisitIndex}
             foundIndex={foundIndex}/>
+
+            {visualizationMode === "graph" && (
+            <>
+                        <h2>
+                            {graphAlgorithm === "bfs"
+                                ? "Breadth First Search (BFS)"
+                                : "Depth First Search (DFS)"}
+                        </h2>
+
+                        <GraphVisualizer
+                            vertices={graphData.vertices}
+                            graph={graphData.graph}
+                            visited={graphVisited}
+                            activeVertex={graphActiveVertex}
+                        />
+                        <div className="graph-statistics">
+                        <h3>Graph Analysis</h3>
+
+                        <p>
+                            Algorithm:{" "}
+                            {graphAlgorithm === "bfs" ? "BFS" : "DFS"}
+                        </p>
+
+                        <p>
+                            Steps: {graphStats.steps}
+                        </p>
+
+                        <p>
+                            Nodes Visited: {graphStats.visited}
+                        </p>
+
+                        <p>
+                            Comparisons: {graphStats.comparisons}
+                        </p>
+
+                        <p>
+                            Traversal Order:{" "}
+                            {graphStats.traversalOrder.length > 0
+                                ? graphStats.traversalOrder.join(" → ")
+                                : "-"}
+                        </p>
+
+                        <p>
+                            Time Complexity: O(V + E)
+                        </p>
+
+                        <p>
+                            Space Complexity: O(V)
+                        </p>
+                    </div>
+                    </>
+                )}
              </div>
 
             

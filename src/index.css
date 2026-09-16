@@ -112,3 +112,175 @@ body {
 
     z-index: 2;
 }
+
+/* =========================
+   HEAP VISUALIZER
+========================= */
+
+.heap-tree {
+    width: 100%;
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+    margin: 30px 0;
+}
+
+/* SVG layer containing parent-child connections */
+
+.heap-connections {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: visible;
+}
+
+/* Individual connection */
+
+.heap-connection {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
+/* Node */
+
+.heap-node-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Circle */
+
+.heap-node {
+    width: 60px;
+    height: 60px;
+
+    border: 3px solid black;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    box-sizing: border-box;
+}
+
+/* Index label */
+
+.heap-node-index {
+    margin-top: 6px;
+    font-size: 11px;
+}
+
+/* Highlighted node */
+
+.heap-node-highlighted .heap-node {
+    transform: scale(1.12);
+}
+
+/* Empty heap */
+
+.heap-empty {
+    padding: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.heap-statistics {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 400px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.heap-statistics h3 {
+    margin-top: 0;
+}
+
+.heap-statistics p {
+    margin: 8px 0;
+}
+
+ /* =========================
+    GRAPH VISUALIZER
+ ========================= */
+
+.graph-visualizer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+    overflow-x: auto;
+}
+
+.graph-svg {
+    min-width: 700px;
+    min-height: 450px;
+}
+
+.graph-edge {
+    stroke: black;
+    stroke-width: 2;
+}
+
+.graph-node {
+    fill: white;
+    stroke: black;
+    stroke-width: 3;
+    transition: all 0.3s ease;
+}
+
+.graph-node.visited {
+    fill: #d4f8d4;
+}
+
+.graph-node.active {
+    fill: #ffe08a;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.graph-node-label {
+    font-size: 18px;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.graph-empty {
+    padding: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* =========================
+   GRAPH STATISTICS
+========================= */
+
+.graph-statistics {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 450px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.graph-statistics h3 {
+    margin-top: 0;
+}
+
+.graph-statistics p {
+    margin: 8px 0;
+}
