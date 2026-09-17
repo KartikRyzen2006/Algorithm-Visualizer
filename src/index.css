@@ -284,3 +284,183 @@ body {
 .graph-statistics p {
     margin: 8px 0;
 }
+
+/* =========================
+   GREEDY VISUALIZER
+========================= */
+
+.greedy-container {
+    width: 100%;
+    margin: 30px 0;
+}
+
+.greedy-container h3 {
+    margin-top: 25px;
+}
+
+.greedy-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.greedy-box {
+    width: 65px;
+    height: 65px;
+    border: 3px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    font-size: 20px;
+    font-weight: bold;
+    box-sizing: border-box;
+    transition: transform 0.2s ease;
+}
+
+.greedy-box span {
+    font-size: 10px;
+    font-weight: normal;
+    margin-top: 4px;
+}
+
+.greedy-box.greedy-active {
+    transform: scale(1.12);
+}
+
+.greedy-result {
+    margin: 25px auto;
+    padding: 15px;
+    max-width: 400px;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.greedy-empty {
+    padding: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.greedy-statistics {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 450px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.greedy-statistics h3 {
+    margin-top: 0;
+}
+
+.greedy-statistics p {
+    margin: 8px 0;
+}
+
+/* =========================
+   DP VISUALIZER
+========================= */
+
+.dp-container {
+    width: 100%;
+    margin: 30px 0;
+}
+
+.dp-container h3 {
+    margin-top: 25px;
+}
+
+.dp-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.dp-cell,
+.dp-input-cell {
+    width: 70px;
+    height: 70px;
+    border: 3px solid black;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+    box-sizing: border-box;
+
+    transition: transform 0.2s ease;
+}
+
+.dp-cell strong,
+.dp-input-cell strong {
+    font-size: 20px;
+}
+
+.dp-cell span,
+.dp-input-cell span {
+    font-size: 10px;
+    margin-top: 5px;
+    font-weight: normal;
+}
+
+.dp-cell.dp-active,
+.dp-input-cell.dp-active {
+    transform: scale(1.12);
+}
+
+.dp-cell.dp-previous {
+    border-style: dashed;
+}
+
+.dp-operation {
+    margin: 25px auto;
+    padding: 15px;
+    max-width: 450px;
+
+    border: 2px solid black;
+    border-radius: 10px;
+
+    text-align: center;
+    font-weight: bold;
+}
+
+.dp-empty {
+    padding: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* =========================
+   DP STATISTICS
+========================= */
+
+.dp-statistics {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 450px;
+
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.dp-statistics h3 {
+    margin-top: 0;
+}
+
+.dp-statistics p {
+    margin: 8px 0;
+}
