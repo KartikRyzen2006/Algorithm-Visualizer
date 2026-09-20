@@ -101,7 +101,7 @@ body {
     width: 50px;
     height: 50px;
 
-    border: 2px solid black;
+    border: 2px solid #111827;
     border-radius: 50%;
 
     display: flex;
@@ -110,9 +110,54 @@ body {
 
     transform: translateX(-50%);
 
+    background: #ffffff;
+    color: #111827 !important;
+
+    font-size: 18px;
+    font-weight: 700;
+
     z-index: 2;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
+
+/* =========================
+   CURRENTLY VISITING
+========================= */
+
+.tree-node-visiting {
+    background: #2196f3 !important;
+    color: #ffffff !important;
+
+    transform:
+        translateX(-50%)
+        scale(1.12);
+
+    box-shadow:
+        0 0 14px rgba(33, 150, 243, 0.5);
+}
+
+
+/* =========================
+   FOUND
+========================= */
+
+.tree-node-found {
+    background: #22c55e !important;
+    color: #ffffff !important;
+
+    transform:
+        translateX(-50%)
+        scale(1.12);
+
+    box-shadow:
+        0 0 14px rgba(34, 197, 94, 0.5);
+}
 /* =========================
    HEAP VISUALIZER
 ========================= */
@@ -125,8 +170,6 @@ body {
     margin: 30px 0;
 }
 
-/* SVG layer containing parent-child connections */
-
 .heap-connections {
     position: absolute;
     inset: 0;
@@ -136,18 +179,16 @@ body {
     overflow: visible;
 }
 
-/* Individual connection */
-
 .heap-connection {
     stroke: black;
     stroke-width: 0.5;
 }
 
-/* Node */
-
 .heap-node-wrapper {
     position: absolute;
+
     transform: translate(-50%, -50%);
+
     z-index: 2;
 
     display: flex;
@@ -155,62 +196,69 @@ body {
     align-items: center;
 }
 
-/* Circle */
-
 .heap-node {
     width: 60px;
     height: 60px;
 
-    border: 3px solid black;
+    border: 3px solid #111827;
     border-radius: 50%;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background: white;
+    background: #ffffff;
+    color: #111827 !important;
 
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 700;
 
     box-sizing: border-box;
-}
 
-/* Index label */
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
 .heap-node-index {
     margin-top: 6px;
+
     font-size: 11px;
+    font-weight: 500;
+
+    color: #cbd5e1 !important;
 }
 
-/* Highlighted node */
+
+/* =========================
+   ACTIVE / HIGHLIGHTED NODE
+========================= */
 
 .heap-node-highlighted .heap-node {
+    background: #2196f3 !important;
+    color: #ffffff !important;
+
     transform: scale(1.12);
+
+    box-shadow:
+        0 0 14px rgba(33, 150, 243, 0.5);
 }
 
-/* Empty heap */
+
+/* =========================
+   EMPTY HEAP
+========================= */
 
 .heap-empty {
     padding: 40px;
+
     text-align: center;
+
     font-size: 18px;
-}
 
-.heap-statistics {
-    margin: 30px auto;
-    padding: 20px;
-    max-width: 400px;
-    border: 2px solid black;
-    border-radius: 10px;
-}
-
-.heap-statistics h3 {
-    margin-top: 0;
-}
-
-.heap-statistics p {
-    margin: 8px 0;
+    color: #aebed0;
 }
 
  /* =========================
@@ -310,23 +358,34 @@ body {
 .greedy-box {
     width: 65px;
     height: 65px;
-    border: 3px solid black;
+
+    border: 3px solid #111827;
     border-radius: 10px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: white;
+
+    background: #ffffff;
+
+    color: #111827;
+
     font-size: 20px;
     font-weight: bold;
+
     box-sizing: border-box;
+
     transition: transform 0.2s ease;
 }
 
 .greedy-box span {
     font-size: 10px;
     font-weight: normal;
+
     margin-top: 4px;
+
+    color: #64748b;
 }
 
 .greedy-box.greedy-active {
@@ -336,13 +395,18 @@ body {
 .greedy-result {
     margin: 25px auto;
     padding: 15px;
-    max-width: 400px;
-    border: 2px solid black;
-    border-radius: 10px;
-    text-align: center;
-    font-weight: bold;
-}
 
+    max-width: 400px;
+
+    border: 2px solid #111827;
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-weight: bold;
+
+    color: #e8eef7;
+}
 .greedy-empty {
     padding: 40px;
     text-align: center;
@@ -372,10 +436,12 @@ body {
 .dp-container {
     width: 100%;
     margin: 30px 0;
+    color: #111827;
 }
 
 .dp-container h3 {
     margin-top: 25px;
+    color: #e8eef7;
 }
 
 .dp-row {
@@ -391,7 +457,8 @@ body {
 .dp-input-cell {
     width: 70px;
     height: 70px;
-    border: 3px solid black;
+
+    border: 3px solid #111827;
     border-radius: 10px;
 
     display: flex;
@@ -399,7 +466,10 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: white;
+    background: #ffffff;
+
+    color: #111827;
+
     box-sizing: border-box;
 
     transition: transform 0.2s ease;
@@ -408,6 +478,8 @@ body {
 .dp-cell strong,
 .dp-input-cell strong {
     font-size: 20px;
+    color: #111827;
+    font-weight: 700;
 }
 
 .dp-cell span,
@@ -415,6 +487,7 @@ body {
     font-size: 10px;
     margin-top: 5px;
     font-weight: normal;
+    color: #64748b;
 }
 
 .dp-cell.dp-active,
@@ -424,37 +497,42 @@ body {
 
 .dp-cell.dp-previous {
     border-style: dashed;
+    border-color: #111827;
 }
 
 .dp-operation {
     margin: 25px auto;
     padding: 15px;
+
     max-width: 450px;
 
-    border: 2px solid black;
+    border: 2px solid #111827;
     border-radius: 10px;
 
     text-align: center;
+
     font-weight: bold;
+
+    color: #e8eef7;
 }
 
 .dp-empty {
     padding: 40px;
     text-align: center;
     font-size: 18px;
+    color: #aebed0;
 }
-
-/* =========================
-   DP STATISTICS
-========================= */
 
 .dp-statistics {
     margin: 30px auto;
     padding: 20px;
+
     max-width: 450px;
 
-    border: 2px solid black;
+    border: 2px solid #1b2b3c;
     border-radius: 10px;
+
+    color: #e8eef7;
 }
 
 .dp-statistics h3 {

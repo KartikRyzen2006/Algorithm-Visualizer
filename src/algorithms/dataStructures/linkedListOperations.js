@@ -1,6 +1,8 @@
 const createLinkedListOperations = () => {
+
     const operations = [];
 
+    // APPEND
     operations.push({
         type: "append",
         value: 10
@@ -16,11 +18,19 @@ const createLinkedListOperations = () => {
         value: 30
     });
 
+    // PREPEND
     operations.push({
         type: "prepend",
         value: 5
     });
 
+    // APPEND
+    operations.push({
+        type: "append",
+        value: 40
+    });
+
+    // DELETE
     operations.push({
         type: "delete",
         value: 20

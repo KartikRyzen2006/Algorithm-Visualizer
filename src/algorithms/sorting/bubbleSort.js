@@ -1,41 +1,73 @@
-const bubbleSort = (arr) => {
-    const operations = [];
-    const array = [...arr]
-    for(let i = 0; i< array.length-1;i++) {
+function bubbleSort(input) {
+    const array = [...input];
+    const steps = [];
+
+    for (let i = 0; i < array.length; i++) {
+
         let swapped = false;
-        for(let j = 0; j < array.length-i-1;j++) {
-            operations.push({
-                type: "compare",
-                index1: j,
-                index2:j+1
-            })
-            if(array[j] > array[j+1]) {
-                [array[j],array[j+1]] = [array[j+1],array[j]];
+
+        for (let j = 0; j < array.length - i - 1; j++) {
+
+            steps.push({
+                type: "sortingCompare",
+                algorithm: "bubble",
+                indices: [j, j + 1],
+                array: [...array],
+                sortedIndexes: [
+                    ...Array.from(
+                        { length: i },
+                        (_, index) => array.length - 1 - index
+                    )
+                ]
+            });
+
+            if (array[j] > array[j + 1]) {
+
+                [
+                    array[j],
+                    array[j + 1]
+                ] = [
+                    array[j + 1],
+                    array[j]
+                ];
+
                 swapped = true;
-                operations.push({
-                    type: "swap",
-                    index1: j,
-                    index2: j+1
+
+                steps.push({
+                    type: "sortingSwap",
+                    algorithm: "bubble",
+                    indices: [j, j + 1],
+                    array: [...array]
                 });
             }
-
         }
-        operations.push({
-            type:"sorted",
-            index: array.length - i - 1
-        })
 
-        if(!swapped) {
-            for(let k = 0; k < array.length-i-1;k++) {
-                operations.push({
-                    type:"sorted",
-                    index: k
-                })
-            }
+        steps.push({
+            type: "sortingSorted",
+            algorithm: "bubble",
+            index: array.length - 1 - i,
+            array: [...array]
+        });
+
+        if (!swapped) {
             break;
         }
     }
-    return operations;
+
+    steps.push({
+        type: "sortingComplete",
+        algorithm: "bubble",
+        array: [...array],
+        sortedIndexes: Array.from(
+            { length: array.length },
+            (_, index) => index
+        )
+    });
+
+    return {
+        result: array,
+        steps
+    };
 }
 
 export default bubbleSort;

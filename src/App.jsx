@@ -10,6 +10,10 @@ import HeapVisualizer from "./components/HeapVisualizer/HeapVisualizer";
 import GraphVisualizer from "./components/GraphVisualizer/GraphVisualizer";
 import GreedyVisualizer from "./components/GreedyVisualizer/GreedyVisualizer";
 import DPVisualizer from "./components/DPVisualizer/DPVisualizer.jsx";
+import StackVisualizer from "./components/StackVisualizer/StackVisualizer";
+
+import createStackOperations from "./algorithms/dataStructures/stackOperations";
+import createLinkedListOperations from "./algorithms/dataStructures/linkedListOperations.js";
 
 import BST from "./algorithms/dataStructures/bst.js";
 import createTreeOperations from "./algorithms/dataStructures/treeOperations.js";
@@ -21,6 +25,9 @@ import Graph from "./algorithms/graph/Graph";
 import bfs from "./algorithms/graph/bfs";
 import dfs from "./algorithms/graph/dfs";
 
+import QueueVisualizer from "./components/QueueVisualizer/QueueVisualizer";
+import createQueueOperations from "./algorithms/dataStructures/queueOperations";
+
 import {
     assignCookies,
     stockProfit,
@@ -28,10 +35,58 @@ import {
     jumpGameII
 } from "./algorithms/greedy";
 
+import SortingVisualizer from "./components/SortingVisualizer/SortingVisualizer";
+import {
+    bubbleSort,
+    selectionSort,
+    insertionSort,
+    mergeSort,
+    quickSort
+} from "./algorithms/sorting";
+
 import climbingStairs from "./algorithms/dynamicProgramming/climbingStairs";
 import houseRobber from "./algorithms/dynamicProgramming/houseRobber";
 import coinChange from "./algorithms/dynamicProgramming/coinChange";
 import longestIncreasingSubsequence from "./algorithms/dynamicProgramming/longestIncreasingSubsequence";
+
+import AppLayout from "./components/Layout/AppLayout";
+
+import AlgorithmHeader from "./components/Dashboard/AlgorithmHeader";
+import ControlPanel from "./components/Dashboard/ControlPanel";
+import AlgorithmInfo from "./components/Dashboard/AlgorithmInfo";
+import StepLog from "./components/Dashboard/Steplog.jsx";
+import OperationPanel from "./components/Dashboard/OperationPanel";
+
+import "./components/Dashboard/Dashboard.css";
+
+/* =========================
+   SORTING
+========================= */
+
+const createSortingOperations = (algorithm, inputArray) => {
+
+    if (algorithm === "bubble") {
+        return bubbleSort(inputArray).steps;
+    }
+
+    if (algorithm === "selection") {
+        return selectionSort(inputArray).steps;
+    }
+
+    if (algorithm === "insertion") {
+        return insertionSort(inputArray).steps;
+    }
+
+    if (algorithm === "merge") {
+        return mergeSort(inputArray).steps;
+    }
+
+    if (algorithm === "quick") {
+        return quickSort(inputArray).steps;
+    }
+
+    return [];
+};
 
 
 /* =========================
@@ -165,7 +220,7 @@ const createDPOperations = (algorithm) => {
         ).steps;
     }
 
-    if (algorithm === "lis") {
+    if (algorithm === "longestIncreasingSubsequence") {
         return longestIncreasingSubsequence(
             [10, 9, 2, 5, 3, 7, 101, 18]
         ).steps;
@@ -174,7 +229,7 @@ const createDPOperations = (algorithm) => {
     return [];
 };
 
-
+const initialSortingArray = [5, 2, 8, 1, 6];
 /* =========================
    APP
 ========================= */
@@ -203,6 +258,22 @@ function App() {
     const [currentVisitIndex, setCurrentVisitIndex] = useState(null);
 
     const [foundIndex, setFoundIndex] = useState(null);
+
+     /* =========================
+       SORTING
+    ========================= */
+
+    const [sortingAlgorithm, setSortingAlgorithm] =
+    useState("bubble");
+
+   const [sortingArray, setSortingArray] =
+    useState(initialSortingArray);
+
+    const [sortingHighlighted, setSortingHighlighted] =
+        useState([]);
+
+    const [sortingPivotIndex, setSortingPivotIndex] =
+        useState(null);
 
 
     /* =========================
@@ -340,6 +411,20 @@ function App() {
     const dpOperations =
         createDPOperations(dpAlgorithm);
 
+    const sortingOperations =
+    createSortingOperations(
+        sortingAlgorithm,
+        initialSortingArray
+    );
+
+    const stackOperations =
+    createStackOperations();
+
+    const queueOperations =
+    createQueueOperations();
+
+    const linkedListOperations =
+    createLinkedListOperations();
 
     /* =========================
        ACTIVE OPERATIONS
@@ -354,7 +439,15 @@ function App() {
                     ? greedyOperations
                     : visualizationMode === "dp"
                         ? dpOperations
-                        : treeOperations;
+                        : visualizationMode === "sorting"
+                            ? sortingOperations
+                            : visualizationMode === "stack"
+                                ? stackOperations
+                                : visualizationMode === "queue"
+                                    ? queueOperations
+                                    : visualizationMode === "linkedList"
+                                        ? linkedListOperations
+                                        : treeOperations;
 
 
     const currentOperation =
@@ -362,6 +455,25 @@ function App() {
         currentStep < operations.length
             ? operations[currentStep]
             : null;
+
+
+    /* =========================
+       PLAY / PAUSE
+    ========================= */
+
+    const handlePlay = () => {
+
+        if (currentStep >= operations.length) {
+            return;
+        }
+
+        setIsPlaying(true);
+    };
+
+
+    const handlePause = () => {
+        setIsPlaying(false);
+    };
 
 
     /* =========================
@@ -396,34 +508,19 @@ function App() {
         );
 
 
-        /* =========================
-           GENERAL RESULTS
-        ========================= */
+        /* GENERAL RESULTS */
 
         setVisualArray(result.array);
-
         setSortedIndexes(result.sortedIndexes);
-
-        setCurrentVisitIndex(
-            result.currentVisitIndex
-        );
-
-        setFoundIndex(
-            result.foundIndex
-        );
-
+        setCurrentVisitIndex(result.currentVisitIndex);
+        setFoundIndex(result.foundIndex);
         setStack(result.stack);
-
         setQueue(result.queue);
-
         setLinkedList(result.linkedList);
-
         setTreeRoot(result.treeRoot);
 
 
-        /* =========================
-           HEAP RESULTS
-        ========================= */
+        /* HEAP */
 
         setHeap(result.heap);
 
@@ -432,9 +529,7 @@ function App() {
         );
 
 
-        /* =========================
-           GRAPH RESULTS
-        ========================= */
+        /* GRAPH */
 
         setGraphVisited(
             result.graphVisited
@@ -445,9 +540,7 @@ function App() {
         );
 
 
-        /* =========================
-           HEAP STATS
-        ========================= */
+        /* HEAP STATS */
 
         if (visualizationMode === "heap") {
 
@@ -492,9 +585,7 @@ function App() {
         }
 
 
-        /* =========================
-           GRAPH STATS
-        ========================= */
+        /* GRAPH STATS */
 
         if (visualizationMode === "graph") {
 
@@ -521,9 +612,7 @@ function App() {
         }
 
 
-        /* =========================
-           GREEDY STATS
-        ========================= */
+        /* GREEDY STATS */
 
         if (visualizationMode === "greedy") {
 
@@ -547,11 +636,65 @@ function App() {
                     prev.result
             }));
         }
+        /* SORTING */
 
+        
 
-        /* =========================
-           DP RESULTS + STATS
-        ========================= */
+       /* SORTING */
+
+        if (visualizationMode === "sorting") {
+
+            if (currentOperation.array) {
+                setSortingArray([
+                    ...currentOperation.array
+                ]);
+            }
+
+            if (
+                currentOperation.type === "sortingSelectMin"
+            ) {
+                setSortingHighlighted([
+                    currentOperation.index
+                ]);
+            } else {
+                setSortingHighlighted(
+                    currentOperation.indices || []
+                );
+            }
+
+            setSortingPivotIndex(
+                currentOperation.pivotIndex ?? null
+            );
+
+            if (
+                currentOperation.type === "sortingSorted"
+            ) {
+                setSortedIndexes(prev => [
+                    ...new Set([
+                        ...prev,
+                        currentOperation.index
+                    ])
+                ]);
+            }
+
+            if (
+                currentOperation.type === "sortingComplete"
+            ) {
+                setSortingArray([
+                    ...currentOperation.array
+                ]);
+
+                setSortingHighlighted([]);
+
+                setSortingPivotIndex(null);
+
+                setSortedIndexes(
+                    currentOperation.sortedIndexes || []
+                );
+            }
+        }
+
+        /* DP */
 
         if (visualizationMode === "dp") {
 
@@ -598,10 +741,14 @@ function App() {
                             : 0
                     ),
 
+                /*
+                 * Only the final DP result should
+                 * become the displayed result.
+                 */
                 result:
-                    currentOperation.result ??
-                    currentOperation.value ??
-                    prev.result
+                    currentOperation.type === "dpComplete"
+                        ? currentOperation.result
+                        : prev.result
             }));
         }
 
@@ -638,6 +785,22 @@ function App() {
     /* =========================
        RESET
     ========================= */
+    const resetSortingState = () => {
+
+    setSortingArray([
+        5,
+        2,
+        8,
+        1,
+        6
+    ]);
+
+    setSortingHighlighted([]);
+
+    setSortingPivotIndex(null);
+
+    setSortedIndexes([]);
+};
 
     const handleReset = () => {
 
@@ -653,30 +816,16 @@ function App() {
 
         setIsPlaying(false);
 
-
-        /* Stack */
-
         setStack([]);
-
-
-        /* Queue */
 
         setQueue([]);
 
-
-        /* Linked List */
-
         setLinkedList([]);
-
-
-        /* Tree */
 
         setTreeRoot(
             createBST().root
         );
 
-
-        /* Heap */
 
         setHeap([]);
 
@@ -691,8 +840,6 @@ function App() {
         });
 
 
-        /* Graph */
-
         setGraphVisited([]);
 
         setGraphActiveVertex(null);
@@ -705,16 +852,12 @@ function App() {
         });
 
 
-        /* Greedy */
-
         setGreedyStats({
             steps: 0,
             result: null,
             comparisons: 0
         });
 
-
-        /* DP */
 
         setDpTable([]);
 
@@ -727,6 +870,9 @@ function App() {
             comparisons: 0,
             result: null
         });
+
+        /* Sorting */
+        resetSortingState();
     };
 
 
@@ -743,8 +889,6 @@ function App() {
         setIsPlaying(false);
 
 
-        /* Heap */
-
         setHeap([]);
 
         setHeapHighlighted([]);
@@ -758,8 +902,6 @@ function App() {
         });
 
 
-        /* Graph */
-
         setGraphVisited([]);
 
         setGraphActiveVertex(null);
@@ -772,16 +914,12 @@ function App() {
         });
 
 
-        /* Greedy */
-
         setGreedyStats({
             steps: 0,
             result: null,
             comparisons: 0
         });
 
-
-        /* DP */
 
         setDpTable([]);
 
@@ -794,904 +932,250 @@ function App() {
             comparisons: 0,
             result: null
         });
+
+        resetSortingState();
     };
 
 
+    /* =========================
+       RENDER
+    ========================= */
+
     return (
-        <div>
+        <AppLayout
+            visualizationMode={visualizationMode}
+            setVisualizationMode={setVisualizationMode}
+            handleVisualizationChange={handleVisualizationChange}
+            traversal={traversal}
+            setTraversal={setTraversal}
+            graphAlgorithm={graphAlgorithm}
+            setGraphAlgorithm={setGraphAlgorithm}
+            greedyAlgorithm={greedyAlgorithm}
+            setGreedyAlgorithm={setGreedyAlgorithm}
+            dpAlgorithm={dpAlgorithm}
+            setDpAlgorithm={setDpAlgorithm}
+            sortingAlgorithm={sortingAlgorithm}
+            setSortingAlgorithm={setSortingAlgorithm}
 
-            <h1>
-                Algorithm Visualizer
-            </h1>
+        >
+
+            <div className="dashboard">
+
+                <div className="dashboard-grid">
+
+                    {/* =========================
+                        MAIN CONTENT
+                    ========================= */}
+
+                    <main className="dashboard-main">
+
+                        <AlgorithmHeader
+                            visualizationMode={visualizationMode}
+                            traversal={traversal}
+                            sortingAlgorithm={sortingAlgorithm}
+                            graphAlgorithm={graphAlgorithm}
+                            greedyAlgorithm={greedyAlgorithm}
+                            dpAlgorithm={dpAlgorithm}
+                        />
 
 
-            {/* =========================
-                ARRAY VISUALIZATION
-            ========================= */}
+                        <ControlPanel
+                            visualizationMode={visualizationMode}
+                            traversal={traversal}
+                            sortingAlgorithm={sortingAlgorithm}
+                            setSortingAlgorithm={setSortingAlgorithm}
+                            setTraversal={setTraversal}
+                            treeTarget={treeTarget}
+                            setTreeTarget={setTreeTarget}
+                            heapType={heapType}
+                            setHeapType={setHeapType}
+                            graphAlgorithm={graphAlgorithm}
+                            setGraphAlgorithm={setGraphAlgorithm}
+                            greedyAlgorithm={greedyAlgorithm}
+                            setGreedyAlgorithm={setGreedyAlgorithm}
+                            dpAlgorithm={dpAlgorithm}
+                            setDpAlgorithm={setDpAlgorithm}
+                            handlePlay={handlePlay}
+                            handlePause={handlePause}
+                            handleNextStep={handleNextStep}
+                            handleReset={handleReset}
+                            isPlaying={isPlaying}
+                            speed={speed}
+                            setSpeed={setSpeed}
+                        />
 
-            {visualizationMode === "tree" && (
-                <div className="array-container">
 
-                    {visualArray.map(
-                        (value, index) => (
+                        <div className="visualization-card">
 
-                            <ArrayBar
-                                key={index}
-                                value={value}
-                                index={index}
+                            {/* HEAP */}
 
-                                isActive={
-                                    currentOperation &&
-                                    (
-                                        index ===
-                                        currentOperation.index1 ||
+                            {visualizationMode === "heap" && (
+                                <HeapVisualizer
+                                    heap={heap}
+                                    highlighted={heapHighlighted}
+                                />
+                            )}
 
-                                        index ===
-                                        currentOperation.index2
-                                    )
-                                }
+                            {/* SORTING */}
 
-                                operationType={
-                                    currentOperation?.type
-                                }
-
-                                isSorted={
-                                    sortedIndexes.includes(
-                                        index
-                                    )
-                                }
-
-                                currentVisitIndex={
-                                    currentVisitIndex
-                                }
-
-                                foundIndex={
-                                    foundIndex
-                                }
+                            {visualizationMode === "sorting" && (
+                            <SortingVisualizer
+                                array={sortingArray}
+                                highlighted={sortingHighlighted}
+                                sortedIndexes={sortedIndexes}
+                                pivotIndex={sortingPivotIndex}
                             />
+                        )}
 
-                        )
-                    )}
+
+                            {/* GRAPH */}
+
+                            {visualizationMode === "graph" && (
+                                <GraphVisualizer
+                                    vertices={graphData.vertices}
+                                    graph={graphData.graph}
+                                    visited={graphVisited}
+                                    activeVertex={graphActiveVertex}
+                                />
+                            )}
+
+                            {/* STACK */}
+
+                            {visualizationMode === "stack" && (
+                                <StackVisualizer
+                                    stack={stack}
+                                />
+                            )}
+
+
+                            {/* GREEDY */}
+
+                            {visualizationMode === "greedy" && (
+                                <GreedyVisualizer
+                                    algorithm={greedyAlgorithm}
+                                    operation={currentOperation}
+                                />
+                            )}
+
+
+                            {/* DP */}
+
+                            {visualizationMode === "dp" && (
+                                <DPVisualizer
+                                    dp={dpTable}
+                                    activeIndex={dpActiveIndex}
+                                    previousIndexes={dpPreviousIndexes}
+                                    nums={
+                                        currentOperation?.nums || []
+                                    }
+                                    operationType={
+                                        currentOperation?.type || null
+                                    }
+                                />
+                            )}
+
+                            {/* QUEUE */}
+
+                            {visualizationMode === "queue" && (
+                                <QueueVisualizer
+                                    queue={queue}
+                                />
+                            )}
+
+                             {/* LINKED LIST */}
+                            {visualizationMode === "linkedList" && (
+                                <LinkedListVisualizer
+                                    linkedList={linkedList}
+                                />
+                            )}
+
+                            {/* TREE */}
+
+                            {visualizationMode === "tree" && (
+                                <>
+                                    <ArrayBar
+                                        array={visualArray}
+                                        sortedIndexes={sortedIndexes}
+                                        currentVisitIndex={currentVisitIndex}
+                                        foundIndex={foundIndex}
+                                    />
+
+                                    <TreeVisualizer
+                                        root={treeRoot}
+                                        currentVisitIndex={currentVisitIndex}
+                                        foundIndex={foundIndex}
+                                    />
+
+                                    <LinkedListVisualizer
+                                        linkedList={linkedList}
+                                    />
+                                </>
+                            )}
+
+                        </div>
+
+
+                        {/* STEP INDICATOR */}
+
+                        <div className="step-indicator">
+
+                            <span>
+                                Current Step:{" "}
+                                <strong>
+                                    {currentStep >= 0
+                                        ? currentStep + 1
+                                        : 0}
+                                </strong>
+                            </span>
+
+                            <span>
+                                {operations.length > 0
+                                    ? `${Math.min(
+                                        Math.max(currentStep + 1, 0),
+                                        operations.length
+                                    )} / ${operations.length}`
+                                    : "0 / 0"}
+                            </span>
+
+                        </div>
+
+
+                        {/* CURRENT OPERATION */}
+
+                        <OperationPanel
+                            currentOperation={currentOperation}
+                        />
+
+                    </main>
+
+
+                    {/* =========================
+                        RIGHT PANEL
+                    ========================= */}
+
+                    <aside>
+
+                        <AlgorithmInfo
+                            visualizationMode={visualizationMode}
+                            sortingAlgorithm={sortingAlgorithm}
+                            graphAlgorithm={graphAlgorithm}
+                            greedyAlgorithm={greedyAlgorithm}
+                            dpAlgorithm={dpAlgorithm}
+                            heapType={heapType}
+                        />
+
+                        <StepLog
+                            operations={operations}
+                            currentStep={currentStep}
+                        />
+
+                    </aside>
 
                 </div>
-            )}
-
-
-            {/* =========================
-                CONTROLS
-            ========================= */}
-
-            <div className="visualizer-controls">
-
-                <button
-                    onClick={handleNextStep}
-                >
-                    Next Step
-                </button>
-
-
-                <button
-                    onClick={() =>
-                        setIsPlaying(!isPlaying)
-                    }
-                >
-                    {
-                        isPlaying
-                            ? "Pause"
-                            : "Play"
-                    }
-                </button>
-
-
-                <label>
-
-                    Speed:
-
-                    <select
-                        value={speed}
-                        onChange={(e) =>
-                            setSpeed(
-                                Number(e.target.value)
-                            )
-                        }
-                    >
-
-                        <option value={1000}>
-                            Slow
-                        </option>
-
-                        <option value={500}>
-                            Medium
-                        </option>
-
-                        <option value={100}>
-                            Fast
-                        </option>
-
-                    </select>
-
-                </label>
-
-
-                <button
-                    onClick={handleReset}
-                >
-                    Reset
-                </button>
 
             </div>
 
-
-            {/* =========================
-                STACK
-            ========================= */}
-
-            {visualizationMode === "tree" && (
-                <>
-                    <h2>
-                        Stack - TOP
-                    </h2>
-
-                    <div className="stack-container">
-
-                        {stack.map(
-                            (value, index) => (
-
-                                <div
-                                    className="stack-item"
-                                    key={index}
-                                >
-
-                                    {value}
-
-                                    {
-                                        index ===
-                                        stack.length - 1 && (
-                                            <span className="top-label">
-                                                ← TOP
-                                            </span>
-                                        )
-                                    }
-
-                                </div>
-
-                            )
-                        )}
-
-                    </div>
-
-
-                    {/* =========================
-                        QUEUE
-                    ========================= */}
-
-                    <h2>
-                        Queue
-                    </h2>
-
-                    <div className="queue-container">
-
-                        <span className="queue-label">
-                            FRONT →
-                        </span>
-
-                        {queue.map(
-                            (value, index) => (
-
-                                <div
-                                    className="queue-item"
-                                    key={index}
-                                >
-                                    {value}
-                                </div>
-
-                            )
-                        )}
-
-                        <span className="queue-label">
-                            ← REAR
-                        </span>
-
-                    </div>
-
-
-                    {/* =========================
-                        LINKED LIST
-                    ========================= */}
-
-                    <h2>
-                        Linked List
-                    </h2>
-
-                    <LinkedListVisualizer
-                        linkedList={linkedList}
-                    />
-
-                </>
-            )}
-
-
-            {/* =========================
-                VISUALIZATION SELECTOR
-            ========================= */}
-
-            <h2>
-                Algorithm / Data Structure
-            </h2>
-
-            <label>
-
-                Visualization:
-
-                <select
-                    value={visualizationMode}
-                    onChange={(e) =>
-                        handleVisualizationChange(
-                            e.target.value
-                        )
-                    }
-                >
-
-                    <option value="tree">
-                        Binary Tree / BST
-                    </option>
-
-                    <option value="heap">
-                        Heap
-                    </option>
-
-                    <option value="graph">
-                        Graph
-                    </option>
-
-                    <option value="greedy">
-                        Greedy Algorithms
-                    </option>
-
-                    <option value="dp">
-                        Dynamic Programming
-                    </option>
-
-                </select>
-
-            </label>
-
-
-            {/* =========================
-                HEAP SELECTOR
-            ========================= */}
-
-            {visualizationMode === "heap" && (
-
-                <label>
-
-                    Heap Type:
-
-                    <select
-                        value={heapType}
-                        onChange={(e) => {
-
-                            setHeapType(
-                                e.target.value
-                            );
-
-                            setCurrentStep(-1);
-
-                            setIsPlaying(false);
-
-                            setHeap([]);
-
-                            setHeapHighlighted([]);
-
-                            setHeapStats({
-                                steps: 0,
-                                comparisons: 0,
-                                swaps: 0,
-                                insertions: 0,
-                                extractions: 0
-                            });
-                        }}
-                    >
-
-                        <option value="min">
-                            Min Heap
-                        </option>
-
-                        <option value="max">
-                            Max Heap
-                        </option>
-
-                    </select>
-
-                </label>
-
-            )}
-
-
-            {/* =========================
-                GRAPH SELECTOR
-            ========================= */}
-
-            {visualizationMode === "graph" && (
-
-                <label>
-
-                    Graph Algorithm:
-
-                    <select
-                        value={graphAlgorithm}
-                        onChange={(e) => {
-
-                            setGraphAlgorithm(
-                                e.target.value
-                            );
-
-                            setCurrentStep(-1);
-
-                            setIsPlaying(false);
-
-                            setGraphVisited([]);
-
-                            setGraphActiveVertex(null);
-
-                            setGraphStats({
-                                steps: 0,
-                                comparisons: 0,
-                                visited: 0,
-                                traversalOrder: []
-                            });
-                        }}
-                    >
-
-                        <option value="bfs">
-                            BFS
-                        </option>
-
-                        <option value="dfs">
-                            DFS
-                        </option>
-
-                    </select>
-
-                </label>
-
-            )}
-
-
-            {/* =========================
-                GREEDY SELECTOR
-            ========================= */}
-
-            {visualizationMode === "greedy" && (
-
-                <label>
-
-                    Greedy Algorithm:
-
-                    <select
-                        value={greedyAlgorithm}
-                        onChange={(e) => {
-
-                            setGreedyAlgorithm(
-                                e.target.value
-                            );
-
-                            setCurrentStep(-1);
-
-                            setIsPlaying(false);
-
-                            setGreedyStats({
-                                steps: 0,
-                                result: null,
-                                comparisons: 0
-                            });
-                        }}
-                    >
-
-                        <option value="cookies">
-                            Assign Cookies
-                        </option>
-
-                        <option value="stock">
-                            Best Time to Buy and Sell Stock II
-                        </option>
-
-                        <option value="jumpGame">
-                            Jump Game
-                        </option>
-
-                        <option value="jumpGameII">
-                            Jump Game II
-                        </option>
-
-                    </select>
-
-                </label>
-
-            )}
-
-
-            {/* =========================
-                DP SELECTOR
-            ========================= */}
-
-            {visualizationMode === "dp" && (
-
-                <label>
-
-                    DP Algorithm:
-
-                    <select
-                        value={dpAlgorithm}
-                        onChange={(e) => {
-
-                            setDpAlgorithm(
-                                e.target.value
-                            );
-
-                            setCurrentStep(-1);
-
-                            setIsPlaying(false);
-
-                            setDpTable([]);
-
-                            setDpActiveIndex(null);
-
-                            setDpPreviousIndexes([]);
-
-                            setDpStats({
-                                steps: 0,
-                                comparisons: 0,
-                                result: null
-                            });
-                        }}
-                    >
-
-                        <option value="climbingStairs">
-                            Climbing Stairs
-                        </option>
-
-                        <option value="houseRobber">
-                            House Robber
-                        </option>
-
-                        <option value="coinChange">
-                            Coin Change
-                        </option>
-
-                        <option value="lis">
-                            Longest Increasing Subsequence
-                        </option>
-
-                    </select>
-
-                </label>
-
-            )}
-
-
-            {/* =========================
-                BINARY TREE
-            ========================= */}
-
-            {visualizationMode === "tree" && (
-
-                <>
-
-                    <h2>
-                        Binary Tree
-                    </h2>
-
-                    <label>
-
-                        Traversal:
-
-                        <select
-                            value={traversal}
-                            onChange={(e) => {
-
-                                setTraversal(
-                                    e.target.value
-                                );
-
-                                setCurrentStep(-1);
-
-                                setCurrentVisitIndex(
-                                    null
-                                );
-
-                                setFoundIndex(
-                                    null
-                                );
-
-                                setIsPlaying(false);
-                            }}
-                        >
-
-                            <option value="preorder">
-                                Preorder
-                            </option>
-
-                            <option value="inorder">
-                                Inorder
-                            </option>
-
-                            <option value="postorder">
-                                Postorder
-                            </option>
-
-                            <option value="levelorder">
-                                Level Order
-                            </option>
-
-                            <option value="search">
-                                BST Search
-                            </option>
-
-                        </select>
-
-                    </label>
-
-
-                    {traversal === "search" && (
-
-                        <label>
-
-                            Target:
-
-                            <input
-                                type="number"
-                                value={treeTarget}
-                                onChange={(e) =>
-                                    setTreeTarget(
-                                        Number(
-                                            e.target.value
-                                        )
-                                    )
-                                }
-                            />
-
-                        </label>
-
-                    )}
-
-
-                    <TreeVisualizer
-                        root={treeRoot}
-                        currentVisitIndex={
-                            currentVisitIndex
-                        }
-                        foundIndex={
-                            foundIndex
-                        }
-                    />
-
-                </>
-
-            )}
-
-
-            {/* =========================
-                HEAP VISUALIZATION
-            ========================= */}
-
-            {visualizationMode === "heap" && (
-
-                <>
-
-                    <h2>
-                        {
-                            heapType === "min"
-                                ? "Min Heap"
-                                : "Max Heap"
-                        }
-                    </h2>
-
-
-                    <HeapVisualizer
-                        heap={heap}
-                        highlighted={
-                            heapHighlighted
-                        }
-                    />
-
-
-                    <div className="heap-statistics">
-
-                        <h3>
-                            Heap Analysis
-                        </h3>
-
-                        <p>
-                            Steps: {heapStats.steps}
-                        </p>
-
-                        <p>
-                            Comparisons: {heapStats.comparisons}
-                        </p>
-
-                        <p>
-                            Swaps: {heapStats.swaps}
-                        </p>
-
-                        <p>
-                            Insertions: {heapStats.insertions}
-                        </p>
-
-                        <p>
-                            Extractions: {heapStats.extractions}
-                        </p>
-
-                        <p>
-                            Time Complexity: O(log n)
-                        </p>
-
-                        <p>
-                            Space Complexity: O(n)
-                        </p>
-
-                    </div>
-
-                </>
-
-            )}
-
-
-            {/* =========================
-                GRAPH VISUALIZATION
-            ========================= */}
-
-            {visualizationMode === "graph" && (
-
-                <>
-
-                    <h2>
-                        {
-                            graphAlgorithm === "bfs"
-                                ? "Breadth First Search (BFS)"
-                                : "Depth First Search (DFS)"
-                        }
-                    </h2>
-
-
-                    <GraphVisualizer
-                        vertices={
-                            graphData.vertices
-                        }
-                        graph={
-                            graphData.graph
-                        }
-                        visited={
-                            graphVisited
-                        }
-                        activeVertex={
-                            graphActiveVertex
-                        }
-                    />
-
-
-                    <div className="graph-statistics">
-
-                        <h3>
-                            Graph Analysis
-                        </h3>
-
-                        <p>
-                            Algorithm:{" "}
-                            {
-                                graphAlgorithm === "bfs"
-                                    ? "BFS"
-                                    : "DFS"
-                            }
-                        </p>
-
-                        <p>
-                            Steps: {graphStats.steps}
-                        </p>
-
-                        <p>
-                            Nodes Visited:{" "}
-                            {graphStats.visited}
-                        </p>
-
-                        <p>
-                            Comparisons:{" "}
-                            {graphStats.comparisons}
-                        </p>
-
-                        <p>
-                            Traversal Order:{" "}
-                            {
-                                graphStats.traversalOrder.length > 0
-                                    ? graphStats.traversalOrder.join(
-                                        " → "
-                                    )
-                                    : "-"
-                            }
-                        </p>
-
-                        <p>
-                            Time Complexity: O(V + E)
-                        </p>
-
-                        <p>
-                            Space Complexity: O(V)
-                        </p>
-
-                    </div>
-
-                </>
-
-            )}
-
-
-            {/* =========================
-                GREEDY VISUALIZATION
-            ========================= */}
-
-            {visualizationMode === "greedy" && (
-
-                <>
-
-                    <h2>
-
-                        {
-                            greedyAlgorithm === "cookies"
-                                ? "Assign Cookies"
-
-                                : greedyAlgorithm === "stock"
-                                    ? "Best Time to Buy and Sell Stock II"
-
-                                    : greedyAlgorithm === "jumpGame"
-                                        ? "Jump Game"
-
-                                        : "Jump Game II"
-                        }
-
-                    </h2>
-
-
-                    <GreedyVisualizer
-                        algorithm={
-                            greedyAlgorithm
-                        }
-                        operation={
-                            currentOperation
-                        }
-                    />
-
-
-                    <div className="greedy-statistics">
-
-                        <h3>
-                            Greedy Analysis
-                        </h3>
-
-                        <p>
-                            Steps:{" "}
-                            {greedyStats.steps}
-                        </p>
-
-                        <p>
-                            Comparisons:{" "}
-                            {greedyStats.comparisons}
-                        </p>
-
-                        <p>
-                            Result:{" "}
-                            {greedyStats.result ?? "-"}
-                        </p>
-
-                        <p>
-                            Time Complexity: O(n log n)
-                        </p>
-
-                        <p>
-                            Space Complexity: O(n)
-                        </p>
-
-                    </div>
-
-                </>
-
-            )}
-
-
-            {/* =========================
-                DP VISUALIZATION
-            ========================= */}
-
-            {visualizationMode === "dp" && (
-
-                <>
-
-                    <h2>
-
-                        {
-                            dpAlgorithm === "climbingStairs"
-                                ? "Climbing Stairs"
-
-                                : dpAlgorithm === "houseRobber"
-                                    ? "House Robber"
-
-                                    : dpAlgorithm === "coinChange"
-                                        ? "Coin Change"
-
-                                        : "Longest Increasing Subsequence"
-                        }
-
-                    </h2>
-
-
-                    <DPVisualizer
-                        dp={dpTable}
-
-                        activeIndex={
-                            dpActiveIndex
-                        }
-
-                        previousIndexes={
-                            dpPreviousIndexes
-                        }
-
-                        nums={
-                            currentOperation?.nums ||
-                            []
-                        }
-
-                        operationType={
-                            currentOperation?.type
-                        }
-                    />
-
-
-                    <div className="dp-statistics">
-
-                        <h3>
-                            DP Analysis
-                        </h3>
-
-                        <p>
-                            Steps:{" "}
-                            {dpStats.steps}
-                        </p>
-
-                        <p>
-                            State Comparisons:{" "}
-                            {dpStats.comparisons}
-                        </p>
-
-                        <p>
-                            Result:{" "}
-                            {dpStats.result ?? "-"}
-                        </p>
-
-                        <p>
-                            Time Complexity:{" "}
-
-                            {
-                                dpAlgorithm === "lis"
-                                    ? "O(n²)"
-
-                                    : dpAlgorithm === "coinChange"
-                                        ? "O(amount × coins)"
-
-                                        : "O(n)"
-                            }
-
-                        </p>
-
-                        <p>
-                            Space Complexity: O(n)
-                        </p>
-
-                    </div>
-
-                </>
-
-            )}
-
-        </div>
+        </AppLayout>
     );
 }
 

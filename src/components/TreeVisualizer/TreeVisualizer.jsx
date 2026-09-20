@@ -1,4 +1,8 @@
-function TreeVisualizer({ root, currentVisitIndex, foundIndex }) {
+function TreeVisualizer({
+    root,
+    currentVisitIndex,
+    foundIndex
+}) {
     if (root === null) {
         return null;
     }
@@ -6,98 +10,117 @@ function TreeVisualizer({ root, currentVisitIndex, foundIndex }) {
     const nodes = [];
     let xPosition = 0;
 
-    const buildTree = (node, depth = 0) => {
-        if (node === null) {
-            return null;
-        }
-
-        const left = buildTree(node.left, depth + 1);
-
-        const current = {
-            value: node.value,
-            depth: depth,
-            x: xPosition * 100
-        };
-
-        xPosition++;
-
-        const right = buildTree(node.right, depth + 1);
-
-        nodes.push(current);
-
-        return current;
-    };
-
-    // Build positions
-    xPosition = 0;
-    nodes.length = 0;
+    /* =========================
+       BUILD TREE LAYOUT
+    ========================= */
 
     const layout = (node, depth = 0) => {
         if (node === null) {
             return null;
         }
 
-        const left = layout(node.left, depth + 1);
+        layout(node.left, depth + 1);
 
         const current = {
-            node: node,
-            depth: depth,
+            node,
+            depth,
             x: xPosition * 100
         };
 
         xPosition++;
 
-        const right = layout(node.right, depth + 1);
+        layout(node.right, depth + 1);
 
         nodes.push(current);
 
         return current;
     };
 
-    xPosition = 0;
-    nodes.length = 0;
-
     layout(root);
 
+
+    /* =========================
+       FIND NODE POSITION
+    ========================= */
+
     const getPosition = (value) => {
-        return nodes.find(item => item.node.value === value);
+        return nodes.find(
+            item => item.node.value === value
+        );
     };
+
+
+    /* =========================
+       BUILD EDGES
+    ========================= */
 
     const edges = [];
 
     nodes.forEach(({ node, depth, x }) => {
+
         const parentY = depth * 100 + 30;
 
         if (node.left !== null) {
-            const child = getPosition(node.left.value);
 
-            edges.push({
-                x1: x,
-                y1: parentY,
-                x2: child.x,
-                y2: child.depth * 100 + 30
-            });
+            const child = getPosition(
+                node.left.value
+            );
+
+            if (child) {
+                edges.push({
+                    x1: x,
+                    y1: parentY,
+                    x2: child.x,
+                    y2: child.depth * 100 + 30
+                });
+            }
         }
+
 
         if (node.right !== null) {
-            const child = getPosition(node.right.value);
 
-            edges.push({
-                x1: x,
-                y1: parentY,
-                x2: child.x,
-                y2: child.depth * 100 + 30
-            });
+            const child = getPosition(
+                node.right.value
+            );
+
+            if (child) {
+                edges.push({
+                    x1: x,
+                    y1: parentY,
+                    x2: child.x,
+                    y2: child.depth * 100 + 30
+                });
+            }
         }
+
     });
 
-    const maxDepth = Math.max(...nodes.map(node => node.depth));
 
-    const minX = Math.min(...nodes.map(node => node.x));
-    const maxX = Math.max(...nodes.map(node => node.x));
+    /* =========================
+       TREE DIMENSIONS
+    ========================= */
+
+    const maxDepth = Math.max(
+        ...nodes.map(node => node.depth)
+    );
+
+    const minX = Math.min(
+        ...nodes.map(node => node.x)
+    );
+
+    const maxX = Math.max(
+        ...nodes.map(node => node.x)
+    );
 
     const width = maxX - minX + 120;
-    const height = (maxDepth + 1) * 100 + 60;
+
+    const height =
+        (maxDepth + 1) * 100 + 60;
+
+
+    /* =========================
+       RENDER
+    ========================= */
 
     return (
         <div
@@ -107,6 +130,8 @@ function TreeVisualizer({ root, currentVisitIndex, foundIndex }) {
                 height: `${height}px`
             }}
         >
+
+            {/* TREE CONNECTIONS */}
 
             <svg
                 className="tree-lines"
@@ -126,29 +151,36 @@ function TreeVisualizer({ root, currentVisitIndex, foundIndex }) {
                 ))}
             </svg>
 
+
+            {/* TREE NODES */}
+
             {nodes.map(({ node, depth, x }) => {
 
-                let background = "white";
+                const isFound =
+                    node.value === foundIndex;
 
-                if (node.value === foundIndex) {
-                    background = "green";
-                } else if (node.value === currentVisitIndex) {
-                    background = "blue";
-                }
+                const isVisiting =
+                    node.value === currentVisitIndex;
 
                 return (
                     <div
                         key={node.value}
-                        className="tree-node"
+                        className={`tree-node ${
+                            isFound
+                                ? "tree-node-found"
+                                : isVisiting
+                                    ? "tree-node-visiting"
+                                    : ""
+                        }`}
                         style={{
                             left: `${x - minX + 60}px`,
-                            top: `${depth * 100}px`,
-                            background: background
+                            top: `${depth * 100}px`
                         }}
                     >
                         {node.value}
                     </div>
                 );
+
             })}
 
         </div>

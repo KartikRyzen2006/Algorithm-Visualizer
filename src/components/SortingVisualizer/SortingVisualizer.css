@@ -1,0 +1,93 @@
+.sorting-visualizer {
+    width: 100%;
+    min-height: 380px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    box-sizing: border-box;
+}
+
+.sorting-bars {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    gap: 18px;
+
+    min-height: 320px;
+}
+
+.sorting-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 55px;
+}
+
+.sorting-value {
+    width: 55px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding-top: 8px;
+
+    box-sizing: border-box;
+
+    background: #3b82f6;
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    border-radius: 8px 8px 0 0;
+
+    transition:
+        height 0.25s ease,
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.sorting-bar-wrapper span {
+    color: #aebed0;
+    font-size: 12px;
+}
+
+.sorting-active .sorting-value {
+    background: #facc15;
+    color: #111827;
+
+    transform: scale(1.06);
+}
+
+.sorting-sorted .sorting-value {
+    background: #22c55e;
+    color: white;
+}
+
+.sorting-pivot .sorting-value {
+    background: #f97316;
+    color: white;
+}
+
+.sorting-empty {
+    min-height: 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #aebed0;
+
+    font-size: 18px;
+}

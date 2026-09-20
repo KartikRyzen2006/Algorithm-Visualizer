@@ -1,0 +1,353 @@
+/* =========================================
+   APP SHELL
+========================================= */
+
+.app-shell {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(30, 144, 255, 0.08),
+            transparent 35%
+        ),
+        #050b12;
+
+    color: #e8eef7;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar {
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    border-bottom: 1px solid #1b2a3a;
+
+    background: rgba(7, 15, 24, 0.96);
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+
+.navbar-logo {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+
+    color: #2196f3;
+}
+
+
+.navbar-brand h1 {
+    margin: 0;
+
+    font-size: 27px;
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+}
+
+
+.navbar-brand h1 span {
+    color: #2196f3;
+}
+
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+
+.navbar-links button {
+    border: none;
+    background: transparent;
+
+    color: #c7d3e3;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.navbar-links button:hover {
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   THEME TOGGLE
+========================================= */
+
+.theme-toggle {
+    height: 38px;
+
+    display: flex !important;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 5px 9px;
+
+    border: 1px solid #26384c !important;
+    border-radius: 22px;
+
+    background: #091522 !important;
+}
+
+
+.theme-switch {
+    width: 26px;
+    height: 26px;
+
+    border-radius: 50%;
+
+    background: #2196f3;
+
+    display: block;
+}
+
+
+/* =========================================
+   APP BODY
+========================================= */
+
+.app-body {
+    display: grid;
+
+    grid-template-columns: 255px minmax(0, 1fr);
+
+    min-height: calc(100vh - 72px);
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+    width: 255px;
+
+    padding: 18px 14px;
+
+    border-right: 1px solid #1b2a3a;
+
+    background: rgba(5, 12, 20, 0.92);
+
+    overflow-y: auto;
+
+    position: sticky;
+    top: 72px;
+
+    height: calc(100vh - 72px);
+
+    box-sizing: border-box;
+}
+
+
+.sidebar-section {
+    margin-bottom: 25px;
+}
+
+
+.sidebar-section h3 {
+    margin: 0 0 9px 8px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    color: #7190af;
+
+    letter-spacing: 0.5px;
+}
+
+
+.sidebar-item {
+    width: 100%;
+
+    min-height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 8px 12px;
+
+    margin-bottom: 3px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #b9c8da;
+
+    font-size: 15px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.sidebar-item span {
+    width: 20px;
+
+    display: inline-flex;
+
+    justify-content: center;
+
+    color: #9bb0c8;
+}
+
+
+.sidebar-item:hover {
+    background: #101e2d;
+    color: #ffffff;
+}
+
+
+.sidebar-item.active {
+    background: linear-gradient(
+        90deg,
+        #1267c7,
+        #1976d2
+    );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 18px rgba(25, 118, 210, 0.22);
+}
+
+
+.sidebar-item.active span {
+    color: #ffffff;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.app-content {
+    min-width: 0;
+
+    padding: 18px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .app-body {
+        grid-template-columns: 200px minmax(0, 1fr);
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .navbar-brand h1 {
+        font-size: 22px;
+    }
+
+    .navbar-links {
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 0 15px;
+    }
+
+    .navbar-links button:not(.theme-toggle) {
+        display: none;
+    }
+
+    .app-body {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+
+        height: auto;
+
+        position: static;
+
+        border-right: none;
+        border-bottom: 1px solid #1b2a3a;
+
+        display: flex;
+
+        overflow-x: auto;
+
+        padding: 10px;
+    }
+
+    .sidebar-section {
+        display: flex;
+
+        margin: 0;
+
+        gap: 5px;
+    }
+
+    .sidebar-section h3 {
+        display: none;
+    }
+
+    .sidebar-item {
+        white-space: nowrap;
+    }
+
+    .app-content {
+        padding: 12px;
+    }
+
+}
