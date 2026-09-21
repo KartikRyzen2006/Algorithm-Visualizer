@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
 
-import ArrayBar from "./components/ArrayBar/ArrayBar";
+
+import arrayTraversal from "./algorithms/arrays/arrayTraversal";
+import ArrayTraversalVisualizer
+    from "./components/ArrayTraversalVisualizer/ArrayTraversalVisualizer";
+
+import linearSearch from "./algorithms/searching/linearSearch.js";
+
+import binarySearch from "./algorithms/searching/binarySearch.js";
+import BinarySearchVisualizer
+    from "./components/BinarySearchVisualizer/BinarySearchVisualizer";
+
+import prefixSum from "./algorithms/arrays/prefixSum";
+import PrefixSumVisualizer
+    from "./components/PrefixSumVisualizer/PrefixSumVisualizer";
 
 import visualizationEngine from "./engine/visualizationEngine";
 
@@ -248,6 +261,8 @@ function App() {
     const [currentStep, setCurrentStep] = useState(-1);
 
     const [visualArray, setVisualArray] = useState(array);
+    const [arrayActiveIndex, setArrayActiveIndex] =
+    useState(null);
 
     const [sortedIndexes, setSortedIndexes] = useState([]);
 
@@ -274,6 +289,44 @@ function App() {
 
     const [sortingPivotIndex, setSortingPivotIndex] =
         useState(null);
+
+     /* =========================
+       SEARCHING
+    ========================= */
+    
+    const [searchTarget, setSearchTarget] = useState(30);
+
+    const [searchActiveIndex, setSearchActiveIndex] =
+        useState(null);
+
+    const [searchFoundIndex, setSearchFoundIndex] =
+        useState(null);
+
+    /* =========================
+      BINARY SEARCH
+    ========================= */
+
+    const [binaryLow, setBinaryLow] =
+        useState(null);
+
+    const [binaryMid, setBinaryMid] =
+        useState(null);
+
+    const [binaryHigh, setBinaryHigh] =
+        useState(null);
+
+    const [binaryFoundIndex, setBinaryFoundIndex] =
+        useState(null);
+
+     /* =========================
+       PREFIX SUM
+    ========================= */
+
+    const [prefixArray, setPrefixArray] =
+    useState([]);
+
+    const [prefixActiveIndex, setPrefixActiveIndex] =
+    useState(null);
 
 
     /* =========================
@@ -367,6 +420,7 @@ function App() {
     });
 
 
+
     /* =========================
        DYNAMIC PROGRAMMING
     ========================= */
@@ -426,6 +480,24 @@ function App() {
     const linkedListOperations =
     createLinkedListOperations();
 
+    const arrayTraversalOperations =
+    arrayTraversal(array).steps;
+
+    const linearSearchOperations =
+    linearSearch(
+        array,
+        searchTarget
+    ).steps;
+
+    const binarySearchOperations =
+    binarySearch(
+        array,
+        searchTarget
+    ).steps;
+
+    const prefixSumOperations =
+    prefixSum(array).steps;
+
     /* =========================
        ACTIVE OPERATIONS
     ========================= */
@@ -447,7 +519,15 @@ function App() {
                                     ? queueOperations
                                     : visualizationMode === "linkedList"
                                         ? linkedListOperations
-                                        : treeOperations;
+                                        : visualizationMode === "arrayTraversal"
+                                            ? arrayTraversalOperations
+                                            : visualizationMode === "linearSearch"
+                                                ? linearSearchOperations
+                                                 : visualizationMode === "binarySearch"
+                                                    ? binarySearchOperations
+                                                    : visualizationMode === "prefixSum"
+                                                        ? prefixSumOperations
+                                                        : treeOperations;
 
 
     const currentOperation =
@@ -529,6 +609,8 @@ function App() {
         );
 
 
+
+
         /* GRAPH */
 
         setGraphVisited(
@@ -585,6 +667,175 @@ function App() {
         }
 
 
+        /* ARRAY TRAVERSAL */
+
+        if (visualizationMode === "arrayTraversal") {
+
+            if (currentOperation.type === "arrayVisit") {
+
+                setVisualArray([
+                    ...currentOperation.array
+                ]);
+
+                setArrayActiveIndex(
+                    currentOperation.index
+                );
+            }
+
+            if (currentOperation.type === "arrayComplete") {
+
+                setVisualArray([
+                    ...currentOperation.array
+                ]);
+
+                setArrayActiveIndex(null);
+            }
+        }
+
+        /* =========================
+        LINEAR SEARCH
+        ========================= */
+
+        if (visualizationMode === "linearSearch") {
+
+            if (currentOperation.type === "searchCompare") {
+
+                setVisualArray([
+                    ...currentOperation.array
+                ]);
+
+                setSearchActiveIndex(
+                    currentOperation.index
+                );
+
+                setSearchFoundIndex(null);
+            }
+
+            if (currentOperation.type === "searchFound") {
+
+                setSearchActiveIndex(
+                    currentOperation.index
+                );
+
+                setSearchFoundIndex(
+                    currentOperation.index
+                );
+            }
+
+            if (currentOperation.type === "searchNotFound") {
+
+                setSearchActiveIndex(null);
+                setSearchFoundIndex(null);
+            }
+        }
+
+        /* =========================
+        BINARY SEARCH
+        ========================= */
+
+        if (visualizationMode === "binarySearch") {
+
+            if (
+                currentOperation.type ===
+                "binaryCompare"
+            ) {
+
+                setVisualArray([
+                    ...currentOperation.array
+                ]);
+
+                setBinaryLow(
+                    currentOperation.low
+                );
+
+                setBinaryMid(
+                    currentOperation.mid
+                );
+
+                setBinaryHigh(
+                    currentOperation.high
+                );
+
+                setBinaryFoundIndex(null);
+            }
+
+
+            if (
+                currentOperation.type ===
+                "binaryFound"
+            ) {
+
+                setBinaryLow(
+                    currentOperation.low
+                );
+
+                setBinaryMid(
+                    currentOperation.mid
+                );
+
+                setBinaryHigh(
+                    currentOperation.high
+                );
+
+                setBinaryFoundIndex(
+                    currentOperation.mid
+                );
+            }
+
+
+            if (
+                currentOperation.type ===
+                "binaryNotFound"
+            ) {
+
+                setBinaryLow(
+                    currentOperation.low
+                );
+
+                setBinaryMid(null);
+
+                setBinaryHigh(
+                    currentOperation.high
+                );
+
+                setBinaryFoundIndex(null);
+            }
+        }
+
+        /* =========================
+        PREFIX SUM
+        ========================= */
+
+        if (visualizationMode === "prefixSum") {
+
+            if (
+                currentOperation.type ===
+                "prefixSum"
+            ) {
+
+                setPrefixArray([
+                    ...currentOperation.prefix
+                ]);
+
+                setPrefixActiveIndex(
+                    currentOperation.index
+                );
+            }
+
+            if (
+                currentOperation.type ===
+                "prefixComplete"
+            ) {
+
+                setPrefixArray([
+                    ...currentOperation.prefix
+                ]);
+
+                setPrefixActiveIndex(null);
+            }
+        }
+
+
         /* GRAPH STATS */
 
         if (visualizationMode === "graph") {
@@ -636,7 +887,7 @@ function App() {
                     prev.result
             }));
         }
-        /* SORTING */
+        
 
         
 
@@ -801,6 +1052,24 @@ function App() {
 
     setSortedIndexes([]);
 };
+//RESET
+
+    const handleSearchTargetChange = (value) => {
+
+    setSearchTarget(value);
+
+    setCurrentStep(-1);
+
+    setIsPlaying(false);
+
+    setSearchActiveIndex(null);
+
+    setSearchFoundIndex(null);
+
+    
+
+
+};
 
     const handleReset = () => {
 
@@ -814,6 +1083,14 @@ function App() {
 
         setFoundIndex(null);
 
+        setBinaryLow(null);
+        setBinaryMid(null);
+        setBinaryHigh(null);
+        setBinaryFoundIndex(null);
+
+        setPrefixArray([]);
+        setPrefixActiveIndex(null);
+
         setIsPlaying(false);
 
         setStack([]);
@@ -825,6 +1102,11 @@ function App() {
         setTreeRoot(
             createBST().root
         );
+
+        setArrayActiveIndex(null);
+
+        setSearchActiveIndex(null);
+        setSearchFoundIndex(null);
 
 
         setHeap([]);
@@ -901,6 +1183,18 @@ function App() {
             extractions: 0
         });
 
+        setArrayActiveIndex(null);
+
+        setSearchActiveIndex(null);
+        setSearchFoundIndex(null);
+
+        setBinaryLow(null);
+        setBinaryMid(null);
+        setBinaryHigh(null);
+        setBinaryFoundIndex(null);
+
+        setPrefixArray([]);
+        setPrefixActiveIndex(null);
 
         setGraphVisited([]);
 
@@ -984,6 +1278,8 @@ function App() {
                             traversal={traversal}
                             sortingAlgorithm={sortingAlgorithm}
                             setSortingAlgorithm={setSortingAlgorithm}
+                            searchTarget={searchTarget}
+                            setSearchTarget={handleSearchTargetChange}
                             setTraversal={setTraversal}
                             treeTarget={treeTarget}
                             setTreeTarget={setTreeTarget}
@@ -1006,6 +1302,53 @@ function App() {
 
 
                         <div className="visualization-card">
+
+                        {/* ARRAY */}
+
+                        {visualizationMode === "arrayTraversal" && (
+                            <ArrayTraversalVisualizer
+                                array={visualArray}
+                                activeIndex={arrayActiveIndex}
+                            />
+                        )}
+
+
+                        {/* LINEAR SEARCH */}
+
+                        {visualizationMode === "linearSearch" && (
+                            <ArrayTraversalVisualizer
+                                array={visualArray}
+                                activeIndex={searchActiveIndex}
+                                foundIndex={searchFoundIndex}
+                            />
+                        )}
+
+                        {/* BINARY SEARCH*/}
+
+                        {visualizationMode ===
+                            "binarySearch" && (
+
+                            <BinarySearchVisualizer
+                                array={visualArray}
+                                low={binaryLow}
+                                mid={binaryMid}
+                                high={binaryHigh}
+                                foundIndex={binaryFoundIndex}
+                            />
+
+                        )}
+
+                        {/* PREFIX SUM */}
+
+                        {visualizationMode === "prefixSum" && (
+
+                        <PrefixSumVisualizer
+                            array={array}
+                            prefix={prefixArray}
+                            activeIndex={prefixActiveIndex}
+                        />
+
+                        )}
 
                             {/* HEAP */}
 
@@ -1093,12 +1436,7 @@ function App() {
 
                             {visualizationMode === "tree" && (
                                 <>
-                                    <ArrayBar
-                                        array={visualArray}
-                                        sortedIndexes={sortedIndexes}
-                                        currentVisitIndex={currentVisitIndex}
-                                        foundIndex={foundIndex}
-                                    />
+                                   
 
                                     <TreeVisualizer
                                         root={treeRoot}

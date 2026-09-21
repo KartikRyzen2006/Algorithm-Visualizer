@@ -7,6 +7,9 @@ function ControlPanel({
     treeTarget,
     setTreeTarget,
 
+    searchTarget,
+    setSearchTarget,
+
     heapType,
     setHeapType,
 
@@ -97,6 +100,30 @@ function ControlPanel({
 
             </div>
 
+              {/* =========================
+                    LINEAR & BINARY SEARCH
+            ========================= */}
+
+                {(
+                    visualizationMode === "linearSearch" ||
+                    visualizationMode === "binarySearch"
+                ) && (
+                    <div className="algorithm-select">
+
+                        <label>Search Target</label>
+
+                        <input
+                            type="number"
+                            value={searchTarget}
+                            onChange={(e) =>
+                                setSearchTarget(
+                                    Number(e.target.value)
+                                )
+                            }
+                        />
+
+                    </div>
+                )}
 
             {/* =========================
                TREE / BST

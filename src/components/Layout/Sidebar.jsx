@@ -34,34 +34,52 @@ function Sidebar({
                 <h3>ARRAYS</h3>
 
                 <button
-                    className="sidebar-item"
-                    onClick={() => changeMode("tree")}
+                    className={`sidebar-item ${
+                        visualizationMode === "arrayTraversal"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => {
+                        changeMode("arrayTraversal");
+                    }}
                 >
                     <span>▦</span>
                     Array Traversal
                 </button>
 
                 <button
-                    className="sidebar-item"
-                    onClick={() => changeMode("tree")}
+                    className={`sidebar-item ${
+                        visualizationMode === "linearSearch"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => changeMode("linearSearch")}
                 >
                     <span>◷</span>
                     Linear Search
                 </button>
 
                 <button
-                    className="sidebar-item"
-                    onClick={() => changeMode("tree")}
+                    className={`sidebar-item ${
+                        visualizationMode === "binarySearch"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => changeMode("binarySearch")}
                 >
-                    <span>◉</span>
+                    <span>◷</span>
                     Binary Search
                 </button>
 
                 <button
-                    className="sidebar-item"
-                    onClick={() => changeMode("tree")}
+                    className={`sidebar-item ${
+                        visualizationMode === "prefixSum"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => changeMode("prefixSum")}
                 >
-                    <span>⌁</span>
+                    <span>Σ</span>
                     Prefix Sum
                 </button>
 

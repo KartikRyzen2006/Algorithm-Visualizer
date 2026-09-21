@@ -1,32 +1,66 @@
-const binarySearch = (arr,target) => {
-    const operations = [];
+const binarySearch = (input, target) => {
 
-    let left = 0;
-    let right = arr.length-1;
+    const array = [...input];
 
-    while(left <= right) {
-        let mid = Math.floor((left+right)/2);
-        operations.push({
-            type: "visit",
-            index:mid
-        })
+    const steps = [];
 
-        if(arr[mid] === target) {
-            operations.push({
-                type: "found",
-                index: mid
-            })
-            break;
+    let low = 0;
+    let high = array.length - 1;
 
+    while (low <= high) {
+
+        const mid = Math.floor(
+            (low + high) / 2
+        );
+
+        steps.push({
+            type: "binaryCompare",
+            low,
+            mid,
+            high,
+            target,
+            array: [...array]
+        });
+
+        if (array[mid] === target) {
+
+            steps.push({
+                type: "binaryFound",
+                low,
+                mid,
+                high,
+                target,
+                array: [...array]
+            });
+
+            return {
+                result: mid,
+                steps
+            };
         }
 
-        if(target > arr[mid] ) {
-            left = mid + 1;
-        }else{
-            right = mid - 1;
+        if (array[mid] < target) {
+
+            low = mid + 1;
+
+        } else {
+
+            high = mid - 1;
         }
     }
-    return operations;
-}
+
+    steps.push({
+        type: "binaryNotFound",
+        low,
+        high,
+        target,
+        array: [...array]
+    });
+
+    return {
+        result: -1,
+        steps
+    };
+};
 
 export default binarySearch;

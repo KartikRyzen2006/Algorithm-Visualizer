@@ -134,6 +134,46 @@ function AlgorithmInfo({
             };
         }
 
+         /* =========================
+           ARRAY TRAVERSAL
+        ========================= */
+
+        if (visualizationMode === "arrayTraversal") {
+            return {
+                time: "O(n)",
+                space: "O(1)"
+            };
+        }
+
+        /* =========================
+           BINARY AND LINEAR SEARCH
+        ========================= */
+
+
+        if (visualizationMode === "binarySearch") {
+            return {
+                time: "Best: O(1) | Avg: O(log n) | Worst: O(log n)",
+                space: "O(1)"
+            };
+        }
+
+        if (visualizationMode === "linearSearch") {
+            return {
+                time: "Best: O(1) | Avg: O(n) | Worst: O(n)",
+                space: "O(1)"
+            };
+        }
+
+          /* =========================
+           PREFIX SUM
+        ========================= */
+
+        if (visualizationMode === "prefixSum") {
+            return {
+                time: "O(n)",
+                space: "O(n)"
+            };
+        }
 
 
         /* =========================
