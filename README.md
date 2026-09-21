@@ -103,11 +103,13 @@ Original:
 
 Prefix Sum:
 [1, 3, 6, 10, 15]
+```
 
 ---
 
 ## 📁 Project Structure
 
+```
 src/
 │
 ├── algorithms/
@@ -176,10 +178,13 @@ src/
 │
 ├── App.jsx
 └── index.css
+```
 
+---
 
 ## 🖥️ Running Locally
 
+```
 1. Clone the repository
 
 git clone https://github.com/KartikRyzen2006/Algorithm-Visualizer.git
@@ -197,9 +202,12 @@ npm install
 npm run dev
 
 The application will then be available through the local Vite development server.
+```
+---
 
 ## 🚧 Future Improvements
 
+```
 Potential future improvements include:
 
 More algorithms
@@ -216,16 +224,20 @@ Algorithm pseudocode panel
 Code execution visualization
 More advanced graph algorithms
 More advanced dynamic programming algorithms
+```
+
+---
 
 ## 👨‍💻 Author
 
-Kartik Sonar
 
-Computer Science Developer focused on:
+##### Kartik Sonar
 
-Full-Stack Development
-Blockchain Development
-Data Structures & Algorithms
-Web3
-React
-JavaScript
+##### Computer Science Developer focused on:
+
+##### Full-Stack Development
+##### Blockchain Development
+##### Data Structures & Algorithms
+##### Web3
+##### React
+##### JavaScript
