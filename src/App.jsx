@@ -67,7 +67,7 @@ import AppLayout from "./components/Layout/AppLayout";
 import AlgorithmHeader from "./components/Dashboard/AlgorithmHeader";
 import ControlPanel from "./components/Dashboard/ControlPanel";
 import AlgorithmInfo from "./components/Dashboard/AlgorithmInfo";
-import StepLog from "./components/Dashboard/Steplog.jsx";
+import StepLog from "./components/Dashboard/StepLog.jsx";
 import OperationPanel from "./components/Dashboard/OperationPanel";
 
 import "./components/Dashboard/Dashboard.css";
